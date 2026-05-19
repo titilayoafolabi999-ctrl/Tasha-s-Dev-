@@ -2,212 +2,385 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Modern Landing Page</title>
-  <style>
-    * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
-}
-
-body {
-  background: #0b0f1a;
-  color: white;
-}
-
-/* NAVBAR */
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px;
-  background: #111827;
-  position: sticky;
-  top: 0;
-}
-
-.logo {
-  font-size: 20px;
-  font-weight: bold;
-  color: #38bdf8;
-}
-
-nav a {
-  margin: 0 10px;
-  color: white;
-  text-decoration: none;
-}
-
-.menu-btn {
-  display: none;
-  background: none;
-  color: white;
-  font-size: 24px;
-  border: none;
-}
-
-/* HERO */
-.hero {
-  height: 90vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 20px;
-  background: linear-gradient(135deg, #0f172a, #1e293b);
-}
-
-.hero h1 {
-  font-size: 40px;
-  margin-bottom: 10px;
-}
-
-.hero p {
-  color: #cbd5e1;
-  margin-bottom: 20px;
-}
-
-.hero button {
-  padding: 12px 20px;
-  border: none;
-  background: #38bdf8;
-  color: black;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-/* FEATURES */
-.features {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  padding: 50px;
-  flex-wrap: wrap;
-}
-
-.card {
-  background: #111827;
-  padding: 20px;
-  border-radius: 10px;
-  min-width: 150px;
-  text-align: center;
-}
-
-/* ABOUT */
-.about {
-  padding: 50px;
-  text-align: center;
-}
-
-/* CONTACT */
-.contact {
-  padding: 50px;
-  text-align: center;
-}
-
-.contact button {
-  padding: 10px 20px;
-  background: #22c55e;
-  border: none;
-  cursor: pointer;
-}
-
-/* FOOTER */
-footer {
-  padding: 20px;
-  text-align: center;
-  background: #111827;
-  margin-top: 20px;
-}
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  nav {
-    display: none;
-    flex-direction: column;
-    background: #111827;
-    position: absolute;
-    top: 60px;
-    right: 20px;
-    padding: 10px;
-  }
-
-  nav.active {
-    display: flex;
-  }
-
-  .menu-btn {
-    display: block;
-  }
-
-  .hero h1 {
-    font-size: 28px;
-  }
-}
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scoutool Suite — Scraper + Sender</title>
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
 </head>
 <body>
+  <div class="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="brand">
+        <span class="brand-icon">🎯</span>
+        <div class="brand-text">
+          <h1>Scoutool Suite</h1>
+          <span class="brand-tag">Scraper + Sender</span>
+        </div>
+      </div>
+      
+      <nav class="main-nav">
+        <button class="nav-btn active" data-tab="scraper" onclick="router.go('scraper')">
+          <span class="nav-icon">🔍</span>
+          <span class="nav-label">Scraper</span>
+        </button>
+        <button class="nav-btn" data-tab="sender" onclick="router.go('sender')">
+          <span class="nav-icon">✉️</span>
+          <span class="nav-label">Sender</span>
+        </button>
+        <button class="nav-btn" data-tab="pipeline" onclick="router.go('pipeline')">
+          <span class="nav-icon">⚡</span>
+          <span class="nav-label">Pipeline</span>
+        </button>
+      </nav>
 
-  <!-- NAVBAR -->
-  <header class="navbar">
-    <div class="logo">Tasha's DevStudio</div>
-    <nav id="navMenu">
-      <a href="#features">Features</a>
-      <a href="#about">About</a>
-      <a href="#contact">Contact</a>
-    </nav>
-    <button class="menu-btn" onclick="toggleMenu()">☰</button>
-  </header>
+      <div class="header-actions">
+        <button class="btn-icon" onclick="theme.toggle()" title="Toggle theme">🌓</button>
+      </div>
+    </header>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-content">
-      <h1>Build a High-Converting Landing Pages</h1>
-      <p>Fast, responsive, and modern websites using HTML, CSS & JavaScript</p>
-      <button onclick="scrollToSection()">Get Started</button>
+    <!-- SCRAPER TAB -->
+    <section class="tab-view active" id="view-scraper">
+      <div class="layout-split">
+        <!-- Input Panel -->
+        <div class="panel-left">
+          <div class="card">
+            <div class="card-header">
+              <h2>📥 Domain Input</h2>
+              <span class="badge-count" id="inputCount">0 domains</span>
+            </div>
+            
+            <div class="dropzone" id="scraperDropzone">
+              <div class="dropzone-content">
+                <span class="dropzone-icon">📂</span>
+                <p>Drop CSV/TXT file or paste domains below</p>
+                <input type="file" id="scraperFile" accept=".csv,.txt" hidden />
+              </div>
+            </div>
+
+            <textarea 
+              id="scraperInput" 
+              class="input-area"
+              placeholder="example.com&#10;shopifystore.com&#10;brand.co.uk"
+            ></textarea>
+
+            <div class="options-grid">
+              <label class="toggle">
+                <input type="checkbox" id="optContact" checked />
+                <span class="toggle-slider"></span>
+                <span class="toggle-label">/contact & /about</span>
+              </label>
+              <label class="toggle">
+                <input type="checkbox" id="optTerms" />
+                <span class="toggle-slider"></span>
+                <span class="toggle-label">/terms & /privacy</span>
+              </label>
+              <label class="toggle">
+                <input type="checkbox" id="optProxy" checked />
+                <span class="toggle-slider"></span>
+                <span class="toggle-label">Use proxy</span>
+              </label>
+              <label class="toggle">
+                <input type="checkbox" id="optUnique" checked />
+                <span class="toggle-slider"></span>
+                <span class="toggle-label">Unique only</span>
+              </label>
+              <label class="toggle">
+                <input type="checkbox" id="optLower" checked />
+                <span class="toggle-slider"></span>
+                <span class="toggle-label">Lowercase</span>
+              </label>
+            </div>
+
+            <div class="action-bar">
+              <button class="btn btn-primary btn-lg" id="btnScrape" onclick="scraper.start()">
+                <span>▶</span> Start Scraping
+              </button>
+              <button class="btn btn-secondary" onclick="scraper.clear()">Clear</button>
+              <button class="btn btn-success" id="btnExportScraper" onclick="scraper.export()" disabled>
+                Export CSV
+              </button>
+              <button class="btn btn-warning" onclick="scraper.toSender()" disabled id="btnToSender">
+                Send Emails →
+              </button>
+            </div>
+
+            <div class="progress-container hidden" id="scraperProgress">
+              <div class="progress-track">
+                <div class="progress-fill" id="scraperFill"></div>
+              </div>
+              <div class="progress-meta">
+                <span id="scraperStatus">0/0</span>
+                <span id="scraperPercent">0%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Results Panel -->
+        <div class="panel-right">
+          <div class="stats-bar" id="scraperStats">
+            <div class="stat-pill">
+              <span class="stat-num" id="statTotal">0</span>
+              <span class="stat-name">Total</span>
+            </div>
+            <div class="stat-pill">
+              <span class="stat-num" id="statDone">0</span>
+              <span class="stat-name">Done</span>
+            </div>
+            <div class="stat-pill">
+              <span class="stat-num" id="statFound">0</span>
+              <span class="stat-name">Emails</span>
+            </div>
+            <div class="stat-pill">
+              <span class="stat-num" id="statRate">0%</span>
+              <span class="stat-name">Success</span>
+            </div>
+          </div>
+
+          <div class="card results-card" id="scraperResults">
+            <div class="card-header sticky">
+              <h2>📋 Results</h2>
+              <div class="filter-bar">
+                <input type="text" id="filterResults" placeholder="Filter..." oninput="scraper.filter(this.value)" />
+                <select id="filterStatus" onchange="scraper.filterStatus(this.value)">
+                  <option value="all">All</option>
+                  <option value="ok">Success</option>
+                  <option value="error">Failed</option>
+                  <option value="emails">Has Emails</option>
+                </select>
+              </div>
+            </div>
+            <div class="table-container">
+              <table class="results-table" id="scraperTable">
+                <thead>
+                  <tr>
+                    <th>Domain</th>
+                    <th>Status</th>
+                    <th>Emails</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="scraperBody">
+                  <tr class="empty-row">
+                    <td colspan="4">Results appear here after scraping</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SENDER TAB -->
+    <section class="tab-view" id="view-sender">
+      <div class="layout-split">
+        <!-- Input Panel -->
+        <div class="panel-left">
+          <div class="card">
+            <div class="card-header">
+              <h2>📊 Email Data</h2>
+              <span class="badge-count" id="senderCount">0 contacts</span>
+            </div>
+
+            <div class="tabs-sub">
+              <button class="tab-sub active" onclick="sender.switchInput('csv')">Upload CSV</button>
+              <button class="tab-sub" onclick="sender.switchInput('manual')">Manual Entry</button>
+              <button class="tab-sub" onclick="sender.switchInput('fromScraper')">From Scraper</button>
+            </div>
+
+            <!-- CSV Upload -->
+            <div class="sub-view active" id="input-csv">
+              <div class="dropzone" id="senderDropzone">
+                <div class="dropzone-content">
+                  <span class="dropzone-icon">📊</span>
+                  <p>Drop CSV with email columns</p>
+                  <input type="file" id="senderFile" accept=".csv" hidden />
+                </div>
+              </div>
+              <div class="csv-preview hidden" id="csvPreview">
+                <h4>Columns Detected</h4>
+                <div class="tag-list" id="columnTags"></div>
+              </div>
+            </div>
+
+            <!-- Manual Entry -->
+            <div class="sub-view" id="input-manual">
+              <textarea 
+                id="manualInput"
+                class="input-area"
+                placeholder="email,name,store&#10;john@example.com,John,Shop1&#10;jane@test.com,Jane,Shop2"
+              ></textarea>
+            </div>
+
+            <!-- From Scraper -->
+            <div class="sub-view" id="input-fromScraper">
+              <div class="import-box" id="scraperImport">
+                <p>No scraper data available</p>
+                <button class="btn btn-secondary" onclick="router.go('scraper')">Go to Scraper</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h2>✉️ Compose Template</h2>
+            </div>
+
+            <div class="form-group">
+              <label>From (your email)</label>
+              <input type="email" id="senderFrom" placeholder="you@example.com" />
+            </div>
+
+            <div class="form-group">
+              <label>Subject</label>
+              <input type="text" id="senderSubject" placeholder="Hi {name}, quick question about {store}" />
+              <span class="form-hint">Use {column_name} for variables</span>
+            </div>
+
+            <div class="form-group">
+              <label>Email Body</label>
+              <textarea id="senderBody" rows="10" placeholder="Hi {name},
+
+I noticed {store} and wanted to reach out...
+
+Best,
+[Your Name]"></textarea>
+              <span class="form-hint">Use {column_name} for variables</span>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Email Column</label>
+                <select id="emailColumn">
+                  <option value="">Select column...</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Name Column (optional)</label>
+                <select id="nameColumn">
+                  <option value="">None</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="action-bar">
+              <button class="btn btn-primary btn-lg" onclick="sender.generate()">
+                <span>✉️</span> Generate Links
+              </button>
+              <button class="btn btn-secondary" onclick="sender.preview()">Preview</button>
+              <button class="btn btn-success" onclick="sender.exportLinks()" disabled id="btnExportSender">
+                Export Links
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Results Panel -->
+        <div class="panel-right">
+          <div class="card">
+            <div class="card-header sticky">
+              <h2>🔗 Gmail Compose Links</h2>
+              <span class="badge-count" id="linkCount">0 links</span>
+            </div>
+            <div class="table-container">
+              <table class="results-table" id="senderTable">
+                <thead>
+                  <tr>
+                    <th>To</th>
+                    <th>Subject</th>
+                    <th>Preview</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="senderBody">
+                  <tr class="empty-row">
+                    <td colspan="4">Generate links to see results</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PIPELINE TAB -->
+    <section class="tab-view" id="view-pipeline">
+      <div class="pipeline-intro">
+        <h2>⚡ One-Click Pipeline</h2>
+        <p>Scrape domains → Extract emails → Generate send links in one flow</p>
+      </div>
+
+      <div class="pipeline-steps">
+        <div class="step" id="step1">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h3>Scrape Domains</h3>
+            <textarea id="pipelineDomains" placeholder="Enter domains..."></textarea>
+            <button class="btn btn-primary" onclick="pipeline.step1()">Scrape & Extract</button>
+          </div>
+        </div>
+
+        <div class="step-connector">↓</div>
+
+        <div class="step" id="step2">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h3>Review Emails</h3>
+            <div class="step-result" id="step2Result">Waiting...</div>
+          </div>
+        </div>
+
+        <div class="step-connector">↓</div>
+
+        <div class="step" id="step3">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h3>Compose & Send</h3>
+            <div class="step-form hidden" id="step3Form">
+              <input type="text" id="pipelineSubject" placeholder="Subject with {variables}" />
+              <textarea id="pipelineBody" rows="4" placeholder="Email body with {variables}"></textarea>
+              <button class="btn btn-primary" onclick="pipeline.step3()">Generate Gmail Links</button>
+            </div>
+            <div class="step-result" id="step3Result">Complete step 1 first</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Modal -->
+  <div class="modal-backdrop hidden" id="modalBackdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalTitle">Preview</h3>
+        <button class="modal-close" onclick="ui.closeModal()">×</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
     </div>
-  </section>
+  </div>
 
-  <!-- FEATURES -->
-  <section id="features" class="features">
-    <div class="card">⚡ Fast Loading</div>
-    <div class="card">📱 Fully Responsive</div>
-    <div class="card">🎯 SEO Optimized</div>
-  </section>
-
-  <!-- ABOUT -->
-  <section id="about" class="about">
-    <h2>About This Service</h2>
-    <p>
-      We design modern landing pages optimized for conversions, startups, SaaS products,
-      and personal brands using clean frontend code.
-    </p>
-  </section>
-
-  <!-- CONTACT -->
-  <section id="contact" class="contact">
-    <h2>Contact Us</h2>
-    <button onclick="alert('Thanks for reaching out!')">Send Message</button>
-  </section>
-
-  <!-- FOOTER -->
-  <footer>
-    <p>© 2026 Tasha's DevStudio. All Rights Reserved.</p>
-  </footer>
-
-  <script>
-    function toggleMenu() {
-  const nav = document.getElementById("navMenu");
-  nav.classList.toggle("active");
-}
-
-function scrollToSection() {
-  document.getElementById("features").scrollIntoView({
-    behavior: "smooth"
-  });
-}
-  </script>
+  <!-- Scripts -->
+  <script src="js/modules/validator.js"></script>
+  <script src="js/modules/csv.js"></script>
+  <script src="js/modules/proxy.js"></script>
+  <script src="js/modules/extractor.js"></script>
+  <script src="js/modules/scraper.js"></script>
+  <script src="js/modules/sender.js"></script>
+  <script src="js/components/ui.js"></script>
+  <script src="js/components/progress.js"></script>
+  <script src="js/components/table.js"></script>
+  <script src="js/components/dropzone.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/router.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>
+                
