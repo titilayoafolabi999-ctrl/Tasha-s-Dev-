@@ -1,0 +1,94 @@
+/* ============================================
+   RESPONSIVE BREAKPOINTS
+   ============================================ */
+
+@media (max-width: 1024px) {
+  .layout-split {
+    grid-template-columns: 1fr;
+  }
+  
+  .panel-right {
+    order: -1;
+  }
+  
+  .stats-bar {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .app {
+    padding: var(--space-md);
+  }
+  
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .main-nav {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .nav-btn .nav-label {
+    display: none;
+  }
+  
+  .options-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .action-bar {
+    justify-content: stretch;
+  }
+  
+  .action-bar .btn {
+    flex: 1;
+    justify-content: center;
+  }
+  
+  .stats-bar {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-sm);
+  }
+  
+  .stat-num {
+    font-size: 1.3rem;
+  }
+  
+  .filter-bar {
+    flex-direction: column;
+  }
+  
+  .step {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .step-num {
+    margin-bottom: var(--space-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .brand-text h1 {
+    font-size: 1.2rem;
+  }
+  
+  .card {
+    padding: var(--space-md);
+  }
+  
+  .results-table th,
+  .results-table td {
+    padding: var(--space-sm);
+    font-size: 0.8rem;
+  }
+}
+
