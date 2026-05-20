@@ -10,7 +10,8 @@ const Proxy = (function() {
   const PROXIES = [
     { url: 'https://api.allorigins.win/raw?url=', weight: 3 },
     { url: 'https://corsproxy.io/?', weight: 2 },
-    { url: 'https://api.codetabs.com/v1/proxy?quest=', weight: 1 }
+    { url: 'https://api.codetabs.com/v1/proxy?quest=', weight: 1 },
+    { url: 'http://192.168.1.33/api/proxy', weight: 1 }
   ];
 
   let currentIndex = 0;
