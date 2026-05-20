@@ -86,13 +86,6 @@ const UI = (function() {
     
     const badges = result.emails.length > 0
       ? result.emails.slice(0, 3).map(e => `<span class="badge">${e}</span>`).join('') +
-        The response was cut off. Let me continue from where it left off and complete the remaining files.
-
----
-
-## `js/components/ui.js` (continued)
-
-```javascript
         (result.emails.length > 3 ? ` <span style="color:var(--text-muted)">+${result.emails.length - 3}</span>` : '')
       : '<span style="color:var(--text-muted)">None</span>';
 
@@ -205,4 +198,3 @@ const UI = (function() {
     closeModal
   };
 })();
-      
