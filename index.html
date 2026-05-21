@@ -367,24 +367,32 @@ Best,
     </div>
   </div>
 
-  <!-- Scripts -->
+  <!-- Scripts - Load order matters! -->
   
+  <!-- 1. Component utilities (dependencies) -->
+  <script src="js/components/theme.js"></script>
   <script src="js/components/ui.js"></script>
-  <script src="js/modules/validator.js"></script>
-  <script src="js/modules/extractor.js"></script>
-  <script src="js/modules/proxy.js"></script>
-  <script src="js/state.js"></script>
-  <script src="js/router.js"></script>
-  <script src="js/modules/csv.js"></script>
-  <script src="js/modules/sender.js"></script>
   <script src="js/components/dropzone.js"></script>
   <script src="js/components/progress.js"></script>
   <script src="js/components/table.js"></script>
   <script src="js/components/charts.js"></script>
-  
+
+  <!-- 2. Core modules -->
+  <script src="js/modules/validator.js"></script>
+  <script src="js/modules/extractor.js"></script>
+  <script src="js/modules/proxy.js"></script>
+  <script src="js/modules/server.js"></script>
+  <script src="js/modules/csv.js"></script>
+  <script src="js/modules/sender.js"></script>
+
+  <!-- 3. State & Routing -->
+  <script src="js/state.js"></script>
+  <script src="js/router.js"></script>
+
+  <!-- 4. Feature modules (depend on above) -->
   <script src="js/modules/scraper.js"></script>
 
-  
+  <!-- 5. App initialization (runs last) -->
   <script src="js/app.js"></script>
 </body>
 </html>
