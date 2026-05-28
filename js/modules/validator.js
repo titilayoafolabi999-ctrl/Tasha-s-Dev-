@@ -1,73 +1,159 @@
 /**
- * Validator Module
- * Domain and email validation utilities
+ * Email Validator Module
+ * Real-time email validation and verification
  */
 
-const Validator = (function() {
+const validator = (function() {
   'use strict';
 
-  const DOMAIN_RE = /^[a-zA-Z0-9][a-zA-Z0-9-]*\.[a-zA-Z0-9.-]{2,}$/i;
-  const EMAIL_RE = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i;
+  // Validation patterns
+  const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const DISPOSABLE_DOMAINS = new Set([
+    'tempmail.com', 'guerrillamail.com', '10minutemail.com',
+    'mailinator.com', 'throwaway.email', 'temp-mail.org'
+  ]);
 
-  const INVALID_DOMAINS = [
-    /^localhost$/i,
-    /^example\.com$/i,
-    /^test\.com$/i,
-    /^domain\.com$/i
-  ];
-
-  function isValidDomain(str) {
-    if (!str || str.length < 4 || str.length > 253) return false;
-    if (!DOMAIN_RE.test(str)) return false;
-    if (INVALID_DOMAINS.some(re => re.test(str))) return false;
-    return true;
+  /**
+   * Validate email format
+   */
+  function isValidFormat(email) {
+    return EMAIL_REGEX.test(email?.trim() || '');
   }
 
-  function isValidEmail(str) {
-    if (!str || str.length < 6 || str.length > 254) return false;
-    if (!EMAIL_RE.test(str)) return false;
-    if (str.startsWith('.') || str.endsWith('.')) return false;
-    if (str.includes('..')) return false;
-    return true;
+  /**
+   * Check if email is disposable
+   */
+  function isDisposable(email) {
+    const domain = email.split('@')[1]?.toLowerCase();
+    return DISPOSABLE_DOMAINS.has(domain);
   }
 
-  function sanitizeDomain(str) {
-    return str
-      .toLowerCase()
-      .trim()
-      .replace(/^https?:\/\//, '')
-      .replace(/^www\./, '')
-      .replace(/\/.*$/, '');
+  /**
+   * Check if email is from corporate domain
+   */
+  function isCorporate(email) {
+    const domain = email.split('@')[1]?.toLowerCase();
+    const disposablePrefixes = ['gmail', 'yahoo', 'outlook', 'hotmail', 'aol', 'test'];
+    return !disposablePrefixes.some(prefix => domain?.startsWith(prefix));
   }
 
-  function extractFromText(text) {
-    const lines = text.split(/\r?\n/);
-    const domains = [];
-    
-    lines.forEach(line => {
-      const trimmed = line.trim();
-      // Check if line looks like a domain
-      if (isValidDomain(trimmed)) {
-        domains.push(sanitizeDomain(trimmed));
+  /**
+   * Validate email via Email Validation API (FREE)
+   * https://www.abstractapi.com/api/email-validation
+   */
+  async function validateWithAPI(email, apiKey = null) {
+    try {
+      // Free fallback validation
+      if (!apiKey) {
+        return {
+          email,
+          is_valid_format: isValidFormat(email),
+          is_disposable: isDisposable(email),
+          is_corporate: isCorporate(email),
+          status: isValidFormat(email) && !isDisposable(email) ? 'valid' : 'invalid',
+          score: calculateScore(email)
+        };
       }
-      // Check if line contains a domain
-      const words = trimmed.split(/\s+/);
-      words.forEach(word => {
-        const clean = sanitizeDomain(word);
-        if (isValidDomain(clean) && !domains.includes(clean)) {
-          domains.push(clean);
-        }
-      });
-    });
-    
-    return [...new Set(domains)];
+
+      // If API key provided, use premium validation
+      const response = await fetch(
+        `https://emailvalidation.abstractapi.com/v1/?api_key=${apiKey}&email=${email}`
+      );
+      
+      if (!response.ok) throw new Error('API error');
+      
+      const data = await response.json();
+      return {
+        email,
+        is_valid_format: data.is_valid_format?.value || false,
+        is_free_email: data.is_free_email?.value || false,
+        is_disposable: data.is_disposable_email?.value || false,
+        is_smtp_valid: data.is_smtp_valid?.value || false,
+        quality_score: data.quality_score || 0,
+        status: data.deliverability || 'unknown'
+      };
+    } catch (err) {
+      console.error('Validation API error:', err);
+      return {
+        email,
+        status: 'unknown',
+        error: err.message
+      };
+    }
+  }
+
+  /**
+   * Calculate quality score (0-100)
+   */
+  function calculateScore(email) {
+    let score = 100;
+
+    if (!isValidFormat(email)) score -= 50;
+    if (isDisposable(email)) score -= 30;
+    if (!isCorporate(email)) score -= 20;
+
+    return Math.max(0, score);
+  }
+
+  /**
+   * Batch validate emails
+   */
+  async function validateBatch(emails, options = {}) {
+    const results = [];
+    const batchSize = options.batchSize || 10;
+
+    for (let i = 0; i < emails.length; i += batchSize) {
+      const batch = emails.slice(i, i + batchSize);
+      const batchPromises = batch.map(email => validateWithAPI(email, options.apiKey));
+      
+      const batchResults = await Promise.all(batchPromises);
+      results.push(...batchResults);
+
+      // Add delay between batches to avoid rate limiting
+      if (i + batchSize < emails.length) {
+        await new Promise(r => setTimeout(r, 100));
+      }
+    }
+
+    return results;
+  }
+
+  /**
+   * Filter emails by quality
+   */
+  function filterByQuality(emails, minScore = 70) {
+    return emails.filter(email => calculateScore(email) >= minScore);
+  }
+
+  /**
+   * Get validation summary
+   */
+  function getSummary(validationResults) {
+    const total = validationResults.length;
+    const valid = validationResults.filter(r => r.status === 'valid').length;
+    const invalid = validationResults.filter(r => r.status === 'invalid').length;
+    const disposable = validationResults.filter(r => r.is_disposable).length;
+    const corporate = validationResults.filter(r => r.is_corporate).length;
+
+    return {
+      total,
+      valid,
+      invalid,
+      disposable,
+      corporate,
+      validRate: ((valid / total) * 100).toFixed(2) + '%',
+      corporateRate: ((corporate / total) * 100).toFixed(2) + '%'
+    };
   }
 
   return {
-    isValidDomain,
-    isValidEmail,
-    sanitizeDomain,
-    extractFromText
+    isValidFormat,
+    isDisposable,
+    isCorporate,
+    validateWithAPI,
+    calculateScore,
+    validateBatch,
+    filterByQuality,
+    getSummary
   };
 })();
-
