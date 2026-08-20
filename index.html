@@ -11,7 +11,6 @@
 </head>
 <body>
   <div class="app">
-    <!-- Header -->
     <header class="header">
       <div class="brand">
         <span class="brand-icon">🎯</span>
@@ -20,7 +19,7 @@
           <span class="brand-tag">Scraper + Sender</span>
         </div>
       </div>
-      
+
       <nav class="main-nav">
         <button class="nav-btn active" data-tab="scraper" onclick="router.go('scraper')">
           <span class="nav-icon">🔍</span>
@@ -41,17 +40,15 @@
       </div>
     </header>
 
-    <!-- SCRAPER TAB -->
     <section class="tab-view active" id="view-scraper">
       <div class="layout-split">
-        <!-- Input Panel -->
         <div class="panel-left">
           <div class="card">
             <div class="card-header">
               <h2>📥 Domain Input</h2>
               <span class="badge-count" id="inputCount">0 domains</span>
             </div>
-            
+
             <div class="dropzone" id="scraperDropzone">
               <div class="dropzone-content">
                 <span class="dropzone-icon">📂</span>
@@ -60,8 +57,8 @@
               </div>
             </div>
 
-            <textarea 
-              id="scraperInput" 
+            <textarea
+              id="scraperInput"
               class="input-area"
               placeholder="example.com&#10;shopifystore.com&#10;brand.co.uk"
             ></textarea>
@@ -119,7 +116,6 @@
           </div>
         </div>
 
-        <!-- Results Panel -->
         <div class="panel-right">
           <div class="stats-bar" id="scraperStats">
             <div class="stat-pill">
@@ -175,10 +171,8 @@
       </div>
     </section>
 
-    <!-- SENDER TAB -->
     <section class="tab-view" id="view-sender">
       <div class="layout-split">
-        <!-- Input Panel -->
         <div class="panel-left">
           <div class="card">
             <div class="card-header">
@@ -192,7 +186,6 @@
               <button class="tab-sub" onclick="sender.switchInput('fromScraper')">From Scraper</button>
             </div>
 
-            <!-- CSV Upload -->
             <div class="sub-view active" id="input-csv">
               <div class="dropzone" id="senderDropzone">
                 <div class="dropzone-content">
@@ -207,16 +200,14 @@
               </div>
             </div>
 
-            <!-- Manual Entry -->
             <div class="sub-view" id="input-manual">
-              <textarea 
+              <textarea
                 id="manualInput"
                 class="input-area"
                 placeholder="email,name,store&#10;john@example.com,John,Shop1&#10;jane@test.com,Jane,Shop2"
               ></textarea>
             </div>
 
-            <!-- From Scraper -->
             <div class="sub-view" id="input-fromScraper">
               <div class="import-box" id="scraperImport">
                 <p>No scraper data available</p>
@@ -279,7 +270,6 @@ Best,
           </div>
         </div>
 
-        <!-- Results Panel -->
         <div class="panel-right">
           <div class="card">
             <div class="card-header sticky">
@@ -308,7 +298,6 @@ Best,
       </div>
     </section>
 
-    <!-- PIPELINE TAB -->
     <section class="tab-view" id="view-pipeline">
       <div class="pipeline-intro">
         <h2>⚡ One-Click Pipeline</h2>
@@ -353,10 +342,8 @@ Best,
     </section>
   </div>
 
-  <!-- Toast -->
   <div class="toast" id="toast"></div>
 
-  <!-- Modal -->
   <div class="modal-backdrop hidden" id="modalBackdrop">
     <div class="modal">
       <div class="modal-header">
@@ -367,9 +354,7 @@ Best,
     </div>
   </div>
 
-  <!-- Scripts - Load order matters! -->
-  
-  <!-- 1. Component utilities (dependencies) -->
+
   <script src="js/components/theme.js"></script>
   <script src="js/components/ui.js"></script>
   <script src="js/components/dropzone.js"></script>
@@ -377,7 +362,6 @@ Best,
   <script src="js/components/table.js"></script>
   <script src="js/components/charts.js"></script>
 
-  <!-- 2. Core modules -->
   <script src="js/modules/validator.js"></script>
   <script src="js/modules/extractor.js"></script>
   <script src="js/modules/proxy.js"></script>
@@ -385,14 +369,11 @@ Best,
   <script src="js/modules/csv.js"></script>
   <script src="js/modules/sender.js"></script>
 
-  <!-- 3. State & Routing -->
   <script src="js/state.js"></script>
   <script src="js/router.js"></script>
 
-  <!-- 4. Feature modules (depend on above) -->
   <script src="js/modules/scraper.js"></script>
 
-  <!-- 5. App initialization (runs last) -->
   <script src="js/app.js"></script>
 </body>
 </html>

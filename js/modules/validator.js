@@ -1,49 +1,35 @@
-/**
- * Email Validator Module
- * Real-time email validation and verification
- */
+
 
 const validator = (function() {
   'use strict';
 
-  // Validation patterns
   const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const DISPOSABLE_DOMAINS = new Set([
     'tempmail.com', 'guerrillamail.com', '10minutemail.com',
     'mailinator.com', 'throwaway.email', 'temp-mail.org'
   ]);
 
-  /**
-   * Validate email format
-   */
+
   function isValidFormat(email) {
     return EMAIL_REGEX.test(email?.trim() || '');
   }
 
-  /**
-   * Check if email is disposable
-   */
+
   function isDisposable(email) {
     const domain = email.split('@')[1]?.toLowerCase();
     return DISPOSABLE_DOMAINS.has(domain);
   }
 
-  /**
-   * Check if email is from corporate domain
-   */
+
   function isCorporate(email) {
     const domain = email.split('@')[1]?.toLowerCase();
     const disposablePrefixes = ['gmail', 'yahoo', 'outlook', 'hotmail', 'aol', 'test'];
     return !disposablePrefixes.some(prefix => domain?.startsWith(prefix));
   }
 
-  /**
-   * Validate email via Email Validation API (FREE)
-   * https://www.abstractapi.com/api/email-validation
-   */
+
   async function validateWithAPI(email, apiKey = null) {
     try {
-      // Free fallback validation
       if (!apiKey) {
         return {
           email,
@@ -55,13 +41,12 @@ const validator = (function() {
         };
       }
 
-      // If API key provided, use premium validation
       const response = await fetch(
         `https://emailvalidation.abstractapi.com/v1/?api_key=${apiKey}&email=${email}`
       );
-      
+
       if (!response.ok) throw new Error('API error');
-      
+
       const data = await response.json();
       return {
         email,
@@ -82,9 +67,7 @@ const validator = (function() {
     }
   }
 
-  /**
-   * Calculate quality score (0-100)
-   */
+
   function calculateScore(email) {
     let score = 100;
 
@@ -95,9 +78,7 @@ const validator = (function() {
     return Math.max(0, score);
   }
 
-  /**
-   * Batch validate emails
-   */
+
   async function validateBatch(emails, options = {}) {
     const results = [];
     const batchSize = options.batchSize || 10;
@@ -105,11 +86,10 @@ const validator = (function() {
     for (let i = 0; i < emails.length; i += batchSize) {
       const batch = emails.slice(i, i + batchSize);
       const batchPromises = batch.map(email => validateWithAPI(email, options.apiKey));
-      
+
       const batchResults = await Promise.all(batchPromises);
       results.push(...batchResults);
 
-      // Add delay between batches to avoid rate limiting
       if (i + batchSize < emails.length) {
         await new Promise(r => setTimeout(r, 100));
       }
@@ -118,16 +98,12 @@ const validator = (function() {
     return results;
   }
 
-  /**
-   * Filter emails by quality
-   */
+
   function filterByQuality(emails, minScore = 70) {
     return emails.filter(email => calculateScore(email) >= minScore);
   }
 
-  /**
-   * Get validation summary
-   */
+
   function getSummary(validationResults) {
     const total = validationResults.length;
     const valid = validationResults.filter(r => r.status === 'valid').length;

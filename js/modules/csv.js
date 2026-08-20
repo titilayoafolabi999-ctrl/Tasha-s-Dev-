@@ -1,7 +1,4 @@
-/**
- * CSV Module
- * Parse and stringify CSV data
- */
+
 
 const CSV = (function() {
   'use strict';
@@ -55,7 +52,7 @@ const CSV = (function() {
 
   function stringify(data, headers) {
     const rows = [headers.join(',')];
-    
+
     data.forEach(row => {
       const values = headers.map(h => {
         const val = String(row[h] || '').replace(/"/g, '""');

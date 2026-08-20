@@ -1,7 +1,4 @@
-/**
- * Charts Component
- * Simple CSS-based bar charts
- */
+
 
 const Charts = (function() {
   'use strict';
@@ -11,7 +8,7 @@ const Charts = (function() {
     if (!container) return;
 
     const max = Math.max(...data.map(d => d.value));
-    
+
     let html = '<div class="chart-bars">';
     data.forEach(item => {
       const percent = (item.value / max) * 100;
@@ -32,4 +29,3 @@ const Charts = (function() {
 
   return { barChart };
 })();
-

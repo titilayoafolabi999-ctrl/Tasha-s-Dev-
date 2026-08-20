@@ -1,7 +1,4 @@
-/**
- * UI Component
- * Core UI helpers and rendering
- */
+
 
 const UI = (function() {
   'use strict';
@@ -17,8 +14,8 @@ const UI = (function() {
   function setScraping(isActive) {
     const btn = document.getElementById('btnScrape');
     btn.disabled = isActive;
-    btn.innerHTML = isActive 
-      ? '<span>⏳</span> Scraping...' 
+    btn.innerHTML = isActive
+      ? '<span>⏳</span> Scraping...'
       : '<span>▶</span> Start Scraping';
   }
 
@@ -77,13 +74,12 @@ const UI = (function() {
     document.getElementById('btnExportScraper').disabled = false;
 
     const tbody = document.getElementById('scraperBody');
-    
-    // Remove empty row if present
+
     const empty = tbody.querySelector('.empty-row');
     if (empty) empty.remove();
 
     const tr = document.createElement('tr');
-    
+
     const badges = result.emails.length > 0
       ? result.emails.slice(0, 3).map(e => `<span class="badge">${e}</span>`).join('') +
         (result.emails.length > 3 ? ` <span style="color:var(--text-muted)">+${result.emails.length - 3}</span>` : '')
@@ -97,8 +93,8 @@ const UI = (function() {
       <td class="${statusClass}">${statusText}</td>
       <td>${badges}</td>
       <td>
-        ${result.emails.length > 0 
-          ? `<button class="btn btn-sm btn-secondary" onclick="navigator.clipboard.writeText('${result.emails.join('\\n')}')">Copy</button>` 
+        ${result.emails.length > 0
+          ? `<button class="btn btn-sm btn-secondary" onclick="navigator.clipboard.writeText('${result.emails.join('\\n')}')">Copy</button>`
           : '-'}
       </td>
     `;
@@ -109,7 +105,7 @@ const UI = (function() {
 
   function renderResults(results) {
     const tbody = document.getElementById('scraperBody');
-    
+
     if (results.length === 0) {
       tbody.innerHTML = '<tr class="empty-row"><td colspan="4">No matching results</td></tr>';
       return;
@@ -118,7 +114,7 @@ const UI = (function() {
     tbody.innerHTML = '';
     results.forEach(result => {
       const tr = document.createElement('tr');
-      
+
       const badges = result.emails.length > 0
         ? result.emails.slice(0, 3).map(e => `<span class="badge">${e}</span>`).join('') +
           (result.emails.length > 3 ? ` <span style="color:var(--text-muted)">+${result.emails.length - 3}</span>` : '')
@@ -132,12 +128,12 @@ const UI = (function() {
         <td class="${statusClass}">${statusText}</td>
         <td>${badges}</td>
         <td>
-          ${result.emails.length > 0 
-            ? `<button class="btn btn-sm btn-secondary" onclick="navigator.clipboard.writeText('${result.emails.join('\\n')}')">Copy</button>` 
+          ${result.emails.length > 0
+            ? `<button class="btn btn-sm btn-secondary" onclick="navigator.clipboard.writeText('${result.emails.join('\\n')}')">Copy</button>`
             : '-'}
         </td>
       `;
-      
+
       tbody.appendChild(tr);
     });
   }
@@ -145,7 +141,7 @@ const UI = (function() {
   function renderSenderResults(links) {
     const container = document.getElementById('senderResults');
     const tbody = document.getElementById('senderBody');
-    
+
     container.classList.remove('hidden');
     tbody.innerHTML = '';
 

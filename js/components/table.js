@@ -1,7 +1,4 @@
-/**
- * Table Component
- * Sortable, filterable data tables
- */
+
 
 const Table = (function() {
   'use strict';
@@ -35,4 +32,3 @@ const Table = (function() {
 
   return { render };
 })();
-

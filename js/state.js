@@ -1,7 +1,4 @@
-/**
- * State Module
- * Central application state management
- */
+
 
 const State = (function() {
   'use strict';
@@ -26,8 +23,7 @@ const State = (function() {
   function subscribe(key, callback) {
     if (!listeners.has(key)) listeners.set(key, new Set());
     listeners.get(key).add(callback);
-    
-    // Return unsubscribe function
+
     return () => listeners.get(key).delete(callback);
   }
 
@@ -46,4 +42,3 @@ const State = (function() {
 
   return { set, get, remove, subscribe, clear };
 })();
-

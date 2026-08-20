@@ -1,21 +1,11 @@
-/**
- * Server Module
- * Backend server for CORS proxy and API requests
- * Handles domain scraping without CORS restrictions
- */
+
 
 const Server = (function() {
   'use strict';
 
-  // Backend server URL - configure as needed
   const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
 
-  /**
-   * Fetch URL through backend server to avoid CORS issues
-   * @param {string} url - Target URL to fetch
-   * @param {object} options - Fetch options
-   * @returns {Promise<Response>}
-   */
+
   async function fetch(url, options = {}) {
     try {
       const response = await window.fetch(`${API_BASE}/proxy`, {
@@ -41,12 +31,7 @@ const Server = (function() {
     }
   }
 
-  /**
-   * Scrape domain and extract emails
-   * @param {string} domain - Domain to scrape
-   * @param {object} options - Scraping options
-   * @returns {Promise<object>}
-   */
+
   async function scrapeDomain(domain, options = {}) {
     try {
       const response = await window.fetch(`${API_BASE}/scrape`, {
@@ -72,12 +57,7 @@ const Server = (function() {
     }
   }
 
-  /**
-   * Batch scrape multiple domains
-   * @param {array} domains - Array of domains to scrape
-   * @param {object} options - Scraping options
-   * @returns {Promise<array>}
-   */
+
   async function scrapeBatch(domains, options = {}) {
     try {
       const response = await window.fetch(`${API_BASE}/scrape-batch`, {
@@ -104,11 +84,7 @@ const Server = (function() {
     }
   }
 
-  /**
-   * Extract emails from HTML content
-   * @param {string} html - HTML content to extract from
-   * @returns {Promise<array>}
-   */
+
   async function extractEmails(html) {
     try {
       const response = await window.fetch(`${API_BASE}/extract-emails`, {
@@ -131,10 +107,7 @@ const Server = (function() {
     }
   }
 
-  /**
-   * Check server health
-   * @returns {Promise<object>}
-   */
+
   async function health() {
     try {
       const response = await window.fetch(`${API_BASE}/health`, {
@@ -148,10 +121,7 @@ const Server = (function() {
     }
   }
 
-  /**
-   * Validate API connectivity
-   * @returns {Promise<boolean>}
-   */
+
   async function isConnected() {
     const health = await Server.health();
     return health.status === 'ok' || health.status === 'healthy';

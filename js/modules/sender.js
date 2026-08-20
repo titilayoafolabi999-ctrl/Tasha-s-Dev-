@@ -1,7 +1,4 @@
-/**
- * Sender Module
- * Gmail compose link generator with template variables
- */
+
 
 const Sender = (function() {
   'use strict';
@@ -13,10 +10,10 @@ const Sender = (function() {
 
   function switchInput(source) {
     currentSource = source;
-    
+
     document.querySelectorAll('.tab-sub').forEach(t => t.classList.remove('active'));
     document.querySelector(`.tab-sub[onclick="sender.switchInput('${source}')"]`).classList.add('active');
-    
+
     document.querySelectorAll('.sub-view').forEach(v => v.classList.remove('active'));
     document.getElementById(`input-${source}`).classList.add('active');
 
@@ -28,7 +25,7 @@ const Sender = (function() {
   function updateScraperImport() {
     const scraperData = State.get('senderData');
     const container = document.getElementById('scraperImport');
-    
+
     if (!scraperData || scraperData.length === 0) {
       container.innerHTML = `
         <p>No scraper data available</p>
@@ -45,15 +42,13 @@ const Sender = (function() {
   async function handleCSV(file) {
     const text = await CSV.readFile(file);
     csvData = CSV.parse(text);
-    
-    // Show columns
+
     const tags = document.getElementById('columnTags');
     tags.innerHTML = csvData.headers.map(h => `<span class="tag">${h}</span>`).join('');
     document.getElementById('csvPreview').classList.remove('hidden');
 
-    // Populate selects
     populateSelects(csvData.headers);
-    
+
     UI.toast(`Loaded ${csvData.rows.length} rows, ${csvData.headers.length} columns`);
     UI.updateSenderCount(csvData.rows.length);
   }
@@ -61,7 +56,7 @@ const Sender = (function() {
   function handleManual() {
     const text = document.getElementById('manualInput').value;
     const lines = text.split(/\n/).filter(l => l.trim());
-    
+
     if (lines.length < 2) {
       UI.toast('Enter at least header + 1 row', 'error');
       return;
@@ -69,7 +64,7 @@ const Sender = (function() {
 
     const parsed = CSV.parse(lines.join('\n'));
     manualData = parsed.rows;
-    
+
     populateSelects(parsed.headers);
     UI.toast(`Loaded ${manualData.length} manual entries`);
     UI.updateSenderCount(manualData.length);
@@ -79,8 +74,7 @@ const Sender = (function() {
     if (!contacts) {
       contacts = State.get('senderData') || [];
     }
-    
-    // Convert to CSV-like format
+
     const headers = ['email', 'domain', 'name'];
     const rows = contacts.map(c => ({
       email: c.email,
@@ -95,20 +89,19 @@ const Sender = (function() {
     populateSelects(headers);
     UI.toast(`Loaded ${rows.length} contacts from scraper`);
     UI.updateSenderCount(rows.length);
-    
-    // Switch to manual view to show data
+
     switchInput('manual');
-    document.getElementById('manualInput').value = 
-      'email,domain,name\n' + 
+    document.getElementById('manualInput').value =
+      'email,domain,name\n' +
       rows.map(r => `${r.email},${r.domain},${r.name}`).join('\n');
   }
 
   function populateSelects(headers) {
     const emailSelect = document.getElementById('emailColumn');
     const nameSelect = document.getElementById('nameColumn');
-    
+
     const options = headers.map(h => `<option value="${h}">${h}</option>`).join('');
-    
+
     emailSelect.innerHTML = '<option value="">Select...</option>' + options;
     nameSelect.innerHTML = '<option value="">None</option>' + options;
   }
@@ -141,12 +134,11 @@ const Sender = (function() {
 
     generatedLinks = data.map((row, idx) => {
       const variables = { ...row, from };
-      
+
       let subject = replaceVariables(subjectTemplate, variables);
       let body = replaceVariables(bodyTemplate, variables);
       const to = row[emailColumn];
 
-      // Gmail deep link
       const params = new URLSearchParams({
         view: 'cm',
         fs: '1',
@@ -185,7 +177,7 @@ const Sender = (function() {
       UI.toast('Generate links first', 'error');
       return;
     }
-    
+
     const first = generatedLinks[0];
     const html = `
       <div style="margin-bottom:16px;">
@@ -200,7 +192,7 @@ const Sender = (function() {
         <a href="${first.url}" target="_blank" class="btn btn-primary">Open Gmail Preview</a>
       </div>
     `;
-    
+
     UI.showModal('Preview First Email', html);
   }
 
@@ -230,4 +222,3 @@ const Sender = (function() {
     getLinks: () => generatedLinks
   };
 })();
-        

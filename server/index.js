@@ -1,7 +1,4 @@
-/**
- * Scoutool Backend Server - OPTIMIZED
- * CORS proxy and email scraping API with fast parallel scraping
- */
+
 
 const express = require('express');
 const cors = require('cors');
@@ -11,14 +8,11 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Middleware
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 
-// Request timeout
 const TIMEOUT = 8000; // Reduced for faster scraping
 
-// Priority routes for faster scraping (ordered by likelihood)
 const PRIORITY_ROUTES = [
   '/',
   '/contact',
@@ -31,18 +25,14 @@ const PRIORITY_ROUTES = [
   '/terms-of-service'
 ];
 
-/**
- * Extract emails from HTML content
- */
+
 function extractEmailsFromHTML(html) {
   const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
   const emails = html.match(emailRegex) || [];
   return [...new Set(emails)]; // Remove duplicates
 }
 
-/**
- * Fetch URL with timeout
- */
+
 async function fetchWithTimeout(url, timeout = TIMEOUT) {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);
@@ -62,18 +52,12 @@ async function fetchWithTimeout(url, timeout = TIMEOUT) {
   }
 }
 
-/**
- * Health check endpoint
- */
+
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Server is running' });
 });
 
-/**
- * Proxy endpoint - Fetch any URL without CORS restrictions
- * POST /api/proxy
- * Body: { url, timeout, headers }
- */
+
 app.post('/api/proxy', async (req, res) => {
   try {
     const { url, timeout = TIMEOUT, headers = {} } = req.body;
@@ -100,11 +84,7 @@ app.post('/api/proxy', async (req, res) => {
   }
 });
 
-/**
- * Scrape single domain endpoint - OPTIMIZED
- * POST /api/scrape
- * Body: { domain, paths, timeout }
- */
+
 app.post('/api/scrape', async (req, res) => {
   try {
     const { domain, paths = PRIORITY_ROUTES, timeout = TIMEOUT } = req.body;
@@ -115,8 +95,7 @@ app.post('/api/scrape', async (req, res) => {
 
     const emails = new Set();
     const results = [];
-    
-    // Parallel scraping - faster!
+
     const pathPromises = paths.map(async (path) => {
       try {
         const url = `https://${domain}${path}`;
@@ -141,7 +120,6 @@ app.post('/api/scrape', async (req, res) => {
       }
     });
 
-    // Wait for all requests in parallel
     const pathResults = await Promise.allSettled(pathPromises);
     pathResults.forEach(result => {
       if (result.status === 'fulfilled') {
@@ -165,17 +143,13 @@ app.post('/api/scrape', async (req, res) => {
   }
 });
 
-/**
- * Batch scrape multiple domains - OPTIMIZED FOR SPEED
- * POST /api/scrape-batch
- * Body: { domains, paths, timeout, concurrency }
- */
+
 app.post('/api/scrape-batch', async (req, res) => {
   try {
-    const { 
-      domains = [], 
-      paths = PRIORITY_ROUTES, 
-      timeout = TIMEOUT, 
+    const {
+      domains = [],
+      paths = PRIORITY_ROUTES,
+      timeout = TIMEOUT,
       concurrency = 8 // Increased for speed
     } = req.body;
 
@@ -186,11 +160,9 @@ app.post('/api/scrape-batch', async (req, res) => {
     const results = [];
     const startTime = Date.now();
 
-    // Process domains with concurrency limit
     for (let i = 0; i < domains.length; i += concurrency) {
       const batch = domains.slice(i, i + concurrency);
-      
-      // Parallel requests per batch
+
       const batchPromises = batch.map(domain =>
         fetchWithTimeout(`https://${domain}/`, timeout)
           .then(res => ({
@@ -207,7 +179,7 @@ app.post('/api/scrape-batch', async (req, res) => {
       );
 
       const batchResults = await Promise.allSettled(batchPromises);
-      
+
       batchResults.forEach(result => {
         if (result.status === 'fulfilled') {
           results.push(result.value);
@@ -234,11 +206,7 @@ app.post('/api/scrape-batch', async (req, res) => {
   }
 });
 
-/**
- * Extract emails from HTML content
- * POST /api/extract-emails
- * Body: { html }
- */
+
 app.post('/api/extract-emails', async (req, res) => {
   try {
     const { html } = req.body;
@@ -261,11 +229,7 @@ app.post('/api/extract-emails', async (req, res) => {
   }
 });
 
-/**
- * Validate emails
- * POST /api/validate-emails
- * Body: { emails }
- */
+
 app.post('/api/validate-emails', async (req, res) => {
   try {
     const { emails = [] } = req.body;
@@ -315,16 +279,12 @@ app.post('/api/validate-emails', async (req, res) => {
   }
 });
 
-/**
- * 404 handler
- */
+
 app.use((req, res) => {
   res.status(404).json({ error: 'Endpoint not found' });
 });
 
-/**
- * Error handler
- */
+
 app.use((error, req, res, next) => {
   console.error('Server error:', error);
   res.status(500).json({
@@ -333,7 +293,6 @@ app.use((error, req, res, next) => {
   });
 });
 
-// Start server
 app.listen(PORT, () => {
   console.log(`\ud83d\ude80 Scoutool Server running on http://localhost:${PORT}`);
   console.log(`\ud83d\udccd API endpoints:`);

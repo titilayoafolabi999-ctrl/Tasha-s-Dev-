@@ -1,7 +1,4 @@
-/**
- * Progress Component
- * Progress bars and loading indicators
- */
+
 
 const Progress = (function() {
   'use strict';
@@ -35,4 +32,3 @@ const Progress = (function() {
 
   return { create };
 })();
-

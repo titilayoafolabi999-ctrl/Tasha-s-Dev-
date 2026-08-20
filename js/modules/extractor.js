@@ -1,7 +1,4 @@
-/**
- * Extractor Module
- * Email extraction from HTML with multiple strategies
- */
+
 
 const Extractor = (function() {
   'use strict';
@@ -21,7 +18,6 @@ const Extractor = (function() {
     textarea.innerHTML = html;
     let decoded = textarea.value;
 
-    // Additional replacements
     const replacements = {
       '&#64;': '@', '&#46;': '.', '&commat;': '@',
       '&period;': '.', '&dot;': '.', '&#x40;': '@',
@@ -48,28 +44,23 @@ const Extractor = (function() {
     const found = new Set();
     const decoded = decodeEntities(html);
 
-    // Regex extraction
     [...decoded.matchAll(EMAIL_RE)].forEach(m => {
       const email = m[0].toLowerCase().trim();
       if (isValidEmail(email)) found.add(email);
     });
 
-    // mailto: links
     [...decoded.matchAll(/mailto:([^"'\s<>?]+)/gi)].forEach(m => {
       try {
         const email = decodeURIComponent(m[1]).split('?')[0].toLowerCase().trim();
         if (isValidEmail(email)) found.add(email);
       } catch (e) {
-        // Invalid URI, skip
       }
     });
 
-    // DOM parsing for better accuracy
     try {
       const parser = new DOMParser();
       const doc = parser.parseFromString(decoded, 'text/html');
 
-      // Text nodes
       const treeWalker = document.createTreeWalker(doc.body, NodeFilter.SHOW_TEXT);
       let textNode;
       while (textNode = treeWalker.nextNode()) {
@@ -80,7 +71,6 @@ const Extractor = (function() {
         });
       }
 
-      // mailto links
       doc.querySelectorAll('a[href^="mailto:"]').forEach(a => {
         const href = a.getAttribute('href');
         if (href) {
@@ -89,10 +79,9 @@ const Extractor = (function() {
         }
       });
 
-      // Data attributes
       doc.querySelectorAll('[data-email], [data-contact], [data-mail]').forEach(el => {
-        const val = el.getAttribute('data-email') || 
-                    el.getAttribute('data-contact') || 
+        const val = el.getAttribute('data-email') ||
+                    el.getAttribute('data-contact') ||
                     el.getAttribute('data-mail');
         if (val && val.includes('@')) {
           const email = val.toLowerCase().trim();
@@ -100,7 +89,6 @@ const Extractor = (function() {
         }
       });
     } catch (e) {
-      // DOM parsing failed, regex results still valid
     }
 
     return [...found];
@@ -108,4 +96,3 @@ const Extractor = (function() {
 
   return { extract };
 })();
-

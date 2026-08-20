@@ -1,7 +1,4 @@
-/**
- * Scraper Module
- * Domain scraping with shallow crawl
- */
+
 
 const Scraper = (function() {
   'use strict';
@@ -16,7 +13,7 @@ const Scraper = (function() {
 
     const input = document.getElementById('scraperInput').value;
     const domains = Validator.extractFromText(input);
-    
+
     if (domains.length === 0) {
       UI.toast('No valid domains found', 'error');
       return;
@@ -101,7 +98,6 @@ const Scraper = (function() {
     UI.setScraping(false);
     UI.toast(`Scraped ${results.length} domains, ${results.reduce((s, r) => s + r.emails.length, 0)} emails found`);
 
-    // Enable send button if we have emails
     const totalEmails = results.reduce((s, r) => s + r.emails.length, 0);
     document.getElementById('btnToSender').disabled = totalEmails === 0;
   }
@@ -126,7 +122,7 @@ const Scraper = (function() {
 
   function filter(text) {
     const lower = text.toLowerCase();
-    filteredResults = results.filter(r => 
+    filteredResults = results.filter(r =>
       r.domain.toLowerCase().includes(lower) ||
       r.emails.some(e => e.toLowerCase().includes(lower))
     );
@@ -166,7 +162,6 @@ const Scraper = (function() {
   }
 
   function toSender() {
-    // Flatten emails with domain context for sender
     const contacts = [];
     results.forEach(r => {
       r.emails.forEach(email => {
@@ -186,4 +181,3 @@ const Scraper = (function() {
 
   return { start, stop, clear, filter, filterStatus, export: exportCSV, toSender, getResults: () => results };
 })();
-          

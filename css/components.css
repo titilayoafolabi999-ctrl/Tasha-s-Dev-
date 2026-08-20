@@ -1,8 +1,6 @@
-/* ============================================
-   COMPONENTS
-   ============================================ */
 
-/* Header */
+
+
 .header {
   display: flex;
   align-items: center;
@@ -38,7 +36,7 @@
   font-weight: 500;
 }
 
-/* Navigation */
+
 .main-nav {
   display: flex;
   gap: var(--space-xs);
@@ -78,7 +76,7 @@
   font-size: 1.1rem;
 }
 
-/* Tab Views */
+
 .tab-view {
   display: none;
   animation: fadeIn 0.3s ease;
@@ -88,7 +86,7 @@
   display: block;
 }
 
-/* Layout */
+
 .layout-split {
   display: grid;
   grid-template-columns: 420px 1fr;
@@ -105,7 +103,7 @@
   min-width: 0;
 }
 
-/* Cards */
+
 .card {
   background: var(--bg-elevated);
   border: 1px solid var(--border);
@@ -150,7 +148,7 @@
   border-radius: var(--radius-sm);
 }
 
-/* Dropzone */
+
 .dropzone {
   border: 2px dashed var(--border);
   border-radius: var(--radius-lg);
@@ -181,7 +179,7 @@
   font-size: 0.9rem;
 }
 
-/* Inputs */
+
 .input-area {
   width: 100%;
   min-height: 160px;
@@ -202,7 +200,7 @@
   border-color: var(--accent);
 }
 
-/* Form elements */
+
 .form-group {
   margin-bottom: var(--space-lg);
 }
@@ -249,7 +247,7 @@
   gap: var(--space-md);
 }
 
-/* Toggle switches */
+
 .options-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -301,7 +299,7 @@
   transform: translateX(18px);
 }
 
-/* Buttons */
+
 .action-bar {
   display: flex;
   gap: var(--space-sm);
@@ -392,7 +390,7 @@
   color: var(--text);
 }
 
-/* Progress */
+
 .progress-container {
   margin-top: var(--space-lg);
 }
@@ -420,7 +418,7 @@
   color: var(--text-muted);
 }
 
-/* Stats */
+
 .stats-bar {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -450,7 +448,7 @@
   letter-spacing: 0.05em;
 }
 
-/* Tables */
+
 .results-card {
   padding: 0;
   overflow: hidden;
@@ -519,7 +517,7 @@
 .status-err { color: var(--danger); }
 .status-warn { color: var(--warning); }
 
-/* Filter bar */
+
 .filter-bar {
   display: flex;
   gap: var(--space-sm);
@@ -541,7 +539,7 @@
   border-color: var(--accent);
 }
 
-/* Sub-tabs */
+
 .tabs-sub {
   display: flex;
   gap: var(--space-xs);
@@ -580,7 +578,7 @@
   display: block;
 }
 
-/* Tag list */
+
 .tag-list {
   display: flex;
   flex-wrap: wrap;
@@ -597,7 +595,7 @@
   font-weight: 600;
 }
 
-/* Import box */
+
 .import-box {
   background: var(--surface);
   border: 1px dashed var(--border);
@@ -611,7 +609,7 @@
   margin-bottom: var(--space-md);
 }
 
-/* Pipeline */
+
 .pipeline-intro {
   text-align: center;
   margin-bottom: var(--space-2xl);
@@ -684,7 +682,7 @@
   padding: var(--space-sm);
 }
 
-/* Toast */
+
 .toast {
   position: fixed;
   bottom: var(--space-xl);
@@ -714,7 +712,7 @@
   color: var(--danger);
 }
 
-/* Modal */
+
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -771,7 +769,7 @@
   max-height: calc(80vh - 60px);
 }
 
-/* Animations */
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
@@ -781,4 +779,3 @@
   from { opacity: 0; transform: translateX(-10px); }
   to { opacity: 1; transform: translateX(0); }
   }
-  

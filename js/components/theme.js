@@ -1,7 +1,4 @@
-/**
- * Theme Module
- * Light/Dark mode toggle
- */
+
 
 const theme = (function() {
   'use strict';
@@ -13,7 +10,7 @@ const theme = (function() {
     const saved = localStorage.getItem(STORAGE_KEY);
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const isDark = saved ? saved === 'dark' : prefersDark;
-    
+
     if (isDark) {
       document.documentElement.classList.add(DARK_CLASS);
     }
@@ -31,7 +28,6 @@ const theme = (function() {
   return { init, toggle, isDarkMode };
 })();
 
-// Initialize on load
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => theme.init());
 } else {
